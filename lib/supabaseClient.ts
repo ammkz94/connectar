@@ -1,5 +1,8 @@
-console.log('[DEBUG] NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-console.log('[DEBUG] NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+console.error('****************************************************************************************************');
+console.error('[DEBUG] SUPABASE_CLIENT.TS: Attempting to read NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.error('[DEBUG] SUPABASE_CLIENT.TS: Attempting to read NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+console.error('****************************************************************************************************');
+throw new Error('[DEBUG] Deliberate error thrown immediately after logging in supabaseClient.ts. If you see this, the logs above should be present.');
 
 import { createClient } from '@supabase/supabase-js';
 
