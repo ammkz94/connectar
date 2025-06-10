@@ -1,8 +1,5 @@
-console.error('****************************************************************************************************');
-console.error('[DEBUG] SUPABASE_CLIENT.TS: Attempting to read NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-console.error('[DEBUG] SUPABASE_CLIENT.TS: Attempting to read NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-console.error('****************************************************************************************************');
-throw new Error('[DEBUG] Deliberate error thrown immediately after logging in supabaseClient.ts. If you see this, the logs above should be present.');
+console.log('[DEBUG] NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log('[DEBUG] NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -44,9 +41,14 @@ const mockErrorResponseData: MockResponse = {
   count: null
 };
 
-if (supabaseUrl && supabaseAnonKey && supabaseUrl !== "https://example.com") { // Added check for placeholder
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Check if supabaseUrl and supabaseAnonKey are defined and not the placeholder
+if (supabaseUrl && supabaseAnonKey && supabaseUrl !== "https://example.com") {
+  // If they are defined and not placeholders, use them to create the Supabase client
+  // The non-null assertion operator (!) is used here because we've already checked
+  // that supabaseUrl and supabaseAnonKey are not null or undefined.
+  supabase = createClient(supabaseUrl!, supabaseAnonKey!);
 } else {
+  // If they are not defined or are placeholders, log a warning and use the mock client
   console.warn(
     '⚠️ Supabase environment variables are missing or are placeholder values. Using a mock Supabase client. ' +
     'Functionality requiring Supabase will return mock error responses. ' +
