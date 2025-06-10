@@ -1,21 +1,25 @@
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+import { supabase } from '../../../../lib/supabaseClient';
 
 export const dynamic = 'force-static';
 
+const serviceUnavailableResponse = () =>
+  new Response(JSON.stringify({ error: 'Service unavailable: Supabase client is not configured.' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
+
 export async function GET() {
-  const { data, error } = await supabase.from('projects').select('*')
-  if (error) return new Response(JSON.stringify({ error }), { status: 500 })
-  return new Response(JSON.stringify(data), { status: 200 })
+  if (!supabase) {
+    return serviceUnavailableResponse();
+  }
+  const { data, error } = await supabase.from('projects').select('*');
+  if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+  return new Response(JSON.stringify(data), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
 
 export async function POST(req: Request) {
-  const body = await req.json()
-  const { data, error } = await supabase.from('projects').insert([body])
-  if (error) return new Response(JSON.stringify({ error }), { status: 500 })
-  return new Response(JSON.stringify(data), { status: 201 })
+  if (!supabase) {
+    return serviceUnavailableResponse();
+  }
+  const body = await req.json();
+  const { data, error } = await supabase.from('projects').insert([body]);
+  if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+  return new Response(JSON.stringify(data), { status: 201, headers: { 'Content-Type': 'application/json' } });
 }
